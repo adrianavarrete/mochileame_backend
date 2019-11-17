@@ -3,6 +3,8 @@ import morgan from 'morgan';
 import mongoose from 'mongoose';
 //import cors from "cors";
 import TravelGroupRoutes from './routes/TravelGroupRoutes';
+import userRoutes from './routes/userRoutes';
+
 class Server {
     public app: express.Application;
 
@@ -34,7 +36,7 @@ class Server {
 
     routes() {
         this.app.use(TravelGroupRoutes);
-        
+        this.app.use(userRoutes);
     }
 
     start() {

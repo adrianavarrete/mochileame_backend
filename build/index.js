@@ -17,6 +17,7 @@ const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
 //import cors from "cors";
 const TravelGroupRoutes_1 = __importDefault(require("./routes/TravelGroupRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -41,6 +42,7 @@ class Server {
     }
     routes() {
         this.app.use(TravelGroupRoutes_1.default);
+        this.app.use(userRoutes_1.default);
     }
     start() {
         this.app.listen(this.app.get('port'), () => {
