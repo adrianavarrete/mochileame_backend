@@ -10,6 +10,27 @@ class userRoutes {
         this.router = express_1.Router();
         this.routes();
     }
+    getUsers(req, res) {
+        User_1.default.find({}).then((data) => {
+            res.status(200).json(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
+    getUser(req, res) {
+        User_1.default.findOne({ "_id": req.params.id }).then((data) => {
+            res.status(200).json(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
+    deleteUser(req, res) {
+        User_1.default.findByIdAndDelete({ "_id": req.params.id }).then((data) => {
+            res.status(200).json(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
     login(req, res) {
         console.log(req.params);
         User_1.default.findOne({ username: req.body.username, password: req.body.password }).then((data) => {
@@ -27,7 +48,11 @@ class userRoutes {
         user.save().then((data) => {
             res.status(200).json(data);
         }).catch((error) => {
-            res.status(500).json(error);
+            if (error.code == 11000) {
+                res.status(412).json(error);
+            }
+            else
+                res.status(500).json(error);
         });
     }
     updateUser(req, res) {
@@ -52,6 +77,9 @@ class userRoutes {
     routes() {
         this.router.post('/login', this.login);
         this.router.post('/postuser', this.postUser);
+        this.router.get('/getusers', this.getUsers);
+        this.router.get('/getuser/:id', this.getUser);
+        this.router.delete('/deleteuser/:id', this.deleteUser);
         this.router.put('/updateUser/:id', this.updateUser);
     }
 }
