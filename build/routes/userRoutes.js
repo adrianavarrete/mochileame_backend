@@ -30,9 +30,29 @@ class userRoutes {
             res.status(500).json(error);
         });
     }
+    updateUser(req, res) {
+        const user = {
+            name: req.body.name,
+            lastname: req.body.lastname,
+            dateofbirth: req.body.dateofbirth,
+            gender: req.body.gender,
+            nationality: req.body.nationality,
+            photo: req.body.photo,
+            biography: req.body.biography,
+            hobbies: req.body.hobbies
+        };
+        User_1.default.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }).then((data) => {
+            console.log(user);
+            res.status(201).json(data);
+            //console.log(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
     routes() {
         this.router.post('/login', this.login);
         this.router.post('/postuser', this.postUser);
+        this.router.put('/updateUser/:id', this.updateUser);
     }
 }
 const userroutes = new userRoutes();
