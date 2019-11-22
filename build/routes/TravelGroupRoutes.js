@@ -93,7 +93,7 @@ class TravelGroupRoutes {
         });
     }
     routes() {
-        this.router.get('/travelgroups', this.getTravelGroups);
+        this.router.get('/travelgroup', this.getTravelGroups);
         this.router.get('/travelgroup/:id', this.getTravelGroup);
         this.router.post('/travelgroup', this.postTravelGroup);
         this.router.put('/travelgroup/:id', this.putTravelGroup);
