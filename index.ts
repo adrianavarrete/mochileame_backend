@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
-//import cors from "cors";
+import cors from 'cors';
 import TravelGroupRoutes from './routes/TravelGroupRoutes';
 import userRoutes from './routes/userRoutes';
 
@@ -27,7 +27,7 @@ class Server {
 
         this.app.set('port', process.env.PORT || 3000);
         this.app.use(morgan('dev'));
-        //this.app.use(cors());
+        this.app.use(cors({origin:'http://localhost:8100'}));
 
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }))

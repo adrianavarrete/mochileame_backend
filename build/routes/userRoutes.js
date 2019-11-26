@@ -32,7 +32,7 @@ class userRoutes {
         });
     }
     login(req, res) {
-        console.log(req.params);
+        console.log(req.body);
         User_1.default.findOne({ username: req.body.username, password: req.body.password }).then((data) => {
             res.status(200).json(data);
         }).catch((error) => {
@@ -76,11 +76,11 @@ class userRoutes {
     }
     routes() {
         this.router.post('/login', this.login);
-        this.router.post('/postuser', this.postUser);
-        this.router.get('/getusers', this.getUsers);
-        this.router.get('/getuser/:id', this.getUser);
-        this.router.delete('/deleteuser/:id', this.deleteUser);
-        this.router.put('/updateUser/:id', this.updateUser);
+        this.router.post('/user/postuser', this.postUser);
+        this.router.get('/user/', this.getUsers);
+        this.router.get('/user/:id', this.getUser);
+        this.router.delete('/user/deleteuser/:id', this.deleteUser);
+        this.router.put('/user/updateUser/:id', this.updateUser);
     }
 }
 const userroutes = new userRoutes();
