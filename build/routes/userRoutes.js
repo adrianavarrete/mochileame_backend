@@ -75,9 +75,15 @@ class userRoutes {
         });
     }
     routes() {
+<<<<<<< HEAD
         this.router.post('/login', this.login);
         this.router.post('/user/postuser', this.postUser);
         this.router.get('/user/', this.getUsers);
+=======
+        this.router.post('/user/login', this.login);
+        this.router.post('/user/postuser', this.postUser);
+        this.router.get('/user', this.getUsers);
+>>>>>>> 78166ace4bd93f4ff8446315d74567d8974e8503
         this.router.get('/user/:id', this.getUser);
         this.router.delete('/user/deleteuser/:id', this.deleteUser);
         this.router.put('/user/updateUser/:id', this.updateUser);

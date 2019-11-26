@@ -74,7 +74,35 @@ class TravelGroupRoutes {
     }
 
 
+
+
+
+addUserTravelGroup (req: Request, res: Response): void{
+    
+    console.log(req.params.id);
+    console.log(req.body.name);
+ 
+    const cambioDeLista = {
+        users: req.body.name
+    };
+
+    TravelGroup.findByIdAndUpdate(req.params.id, {$addToSet: cambioDeLista}, {new: true}).then((data) => {
+        res.status(200).json(data);
+        console.log(data);
+
+    }).catch((err) => {
+        res.status(500).json(err);
+    });
+}
+
+
+
+
+
+
     putTravelGroup(req: Request, res: Response): void {
+        console.log(req.body.name);
+        console.log(req.params.id);
         const updateTravelGroup = {
             name: req.body.name, 
             destination: req.body.destination, 
@@ -101,11 +129,12 @@ class TravelGroupRoutes {
     routes()
     {
 
-        this.router.get('/travelgroup/', this.getTravelGroups);
+        this.router.get('/travelgroup', this.getTravelGroups);
         this.router.get('/travelgroup/:id', this.getTravelGroup);
-        this.router.post('/travelgroup/', this.postTravelGroup);
+        this.router.post('/travelgroup', this.postTravelGroup);
         this.router.put('/travelgroup/:id', this.putTravelGroup);
         this.router.delete('/travelgroup/:id', this.deleteTravelGroup);
+        this.router.put('/travelAddUser/:id', this.addUserTravelGroup);
 
     }
 }

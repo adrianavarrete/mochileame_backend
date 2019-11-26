@@ -27,7 +27,11 @@ class Server {
 
         this.app.set('port', process.env.PORT || 3000);
         this.app.use(morgan('dev'));
+<<<<<<< HEAD
         this.app.use(cors({origin:'http://localhost:8100'}));
+=======
+        this.app.use(cors());
+>>>>>>> 78166ace4bd93f4ff8446315d74567d8974e8503
 
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }))

@@ -35,7 +35,11 @@ class Server {
                 .then(db => console.log('DB Conectada'));
             this.app.set('port', process.env.PORT || 3000);
             this.app.use(morgan_1.default('dev'));
+<<<<<<< HEAD
             this.app.use(cors_1.default({ origin: 'http://localhost:8100' }));
+=======
+            this.app.use(cors_1.default());
+>>>>>>> 78166ace4bd93f4ff8446315d74567d8974e8503
             this.app.use(express_1.default.json());
             this.app.use(express_1.default.urlencoded({ extended: false }));
         });

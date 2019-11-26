@@ -56,7 +56,22 @@ class TravelGroupRoutes {
             res.status(500).json(err);
         });
     }
+    addUserTravelGroup(req, res) {
+        console.log(req.params.id);
+        console.log(req.body.name);
+        const cambioDeLista = {
+            users: req.body.name
+        };
+        TravelGroup_1.default.findByIdAndUpdate(req.params.id, { $addToSet: cambioDeLista }, { new: true }).then((data) => {
+            res.status(200).json(data);
+            console.log(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
     putTravelGroup(req, res) {
+        console.log(req.body.name);
+        console.log(req.params.id);
         const updateTravelGroup = {
             name: req.body.name,
             destination: req.body.destination,
@@ -78,11 +93,16 @@ class TravelGroupRoutes {
         });
     }
     routes() {
+<<<<<<< HEAD
         this.router.get('/travelgroup/', this.getTravelGroups);
+=======
+        this.router.get('/travelgroup', this.getTravelGroups);
+>>>>>>> 78166ace4bd93f4ff8446315d74567d8974e8503
         this.router.get('/travelgroup/:id', this.getTravelGroup);
         this.router.post('/travelgroup/', this.postTravelGroup);
         this.router.put('/travelgroup/:id', this.putTravelGroup);
         this.router.delete('/travelgroup/:id', this.deleteTravelGroup);
+        this.router.put('/travelAddUser/:id', this.addUserTravelGroup);
     }
 }
 const travelGroupRoutes = new TravelGroupRoutes();
