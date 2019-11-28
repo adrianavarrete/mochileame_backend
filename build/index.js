@@ -43,6 +43,9 @@ class Server {
     routes() {
         this.app.use(TravelGroupRoutes_1.default);
         this.app.use(userRoutes_1.default);
+        this.app.get('/', function (req, res) {
+            res.sendFile('/www/index.html', { root: __dirname });
+        });
     }
     start() {
         this.app.listen(this.app.get('port'), () => {
