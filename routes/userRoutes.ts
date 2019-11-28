@@ -39,8 +39,8 @@ class userRoutes {
     }
 
     login(req: Request, res: Response): void {
-        console.log(req.params);
-
+        console.log(req.body);
+     
         User.findOne({ username: req.body.username, password: req.body.password }).then((data) => {
             res.status(200).json(data);
 
@@ -91,7 +91,7 @@ class userRoutes {
     }
 
     routes() {
-        this.router.post('/user/login', this.login);
+        this.router.post('/login', this.login);
         this.router.post('/user/postuser', this.postUser);
         this.router.get('/user', this.getUsers);
         this.router.get('/user/:id', this.getUser);
