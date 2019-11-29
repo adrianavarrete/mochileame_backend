@@ -91,7 +91,7 @@ class userRoutes {
     }
 
     routes() {
-        this.router.post('/login', this.login);
+        this.router.post('/user/login', this.login);
         this.router.post('/user/postuser', this.postUser);
         this.router.get('/user', this.getUsers);
         this.router.get('/user/:id', this.getUser);
