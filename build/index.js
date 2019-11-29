@@ -26,7 +26,7 @@ class Server {
     }
     config() {
         return __awaiter(this, void 0, void 0, function* () {
-            const MONGO_URI = 'mongodb://localhost/minimoAsignaturas';
+            const MONGO_URI = 'mongodb://localhost/mochileame';
             mongoose_1.default.set('useFindAndModify', true);
             mongoose_1.default.connect(MONGO_URI || process.env.MONGODB_URL, {
                 useNewUrlParser: true,
@@ -35,7 +35,7 @@ class Server {
                 .then(db => console.log('DB Conectada'));
             this.app.set('port', process.env.PORT || 3000);
             this.app.use(morgan_1.default('dev'));
-            this.app.use(cors_1.default({ origin: 'http://localhost:8100' }));
+            this.app.use(cors_1.default());
             this.app.use(express_1.default.json());
             this.app.use(express_1.default.urlencoded({ extended: false }));
         });
@@ -43,9 +43,6 @@ class Server {
     routes() {
         this.app.use(TravelGroupRoutes_1.default);
         this.app.use(userRoutes_1.default);
-        this.app.get('/', function (req, res) {
-            res.sendFile('/www/index.html', { root: __dirname });
-        });
     }
     start() {
         this.app.listen(this.app.get('port'), () => {
