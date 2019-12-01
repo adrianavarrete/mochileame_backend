@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import path from 'path';
 import TravelGroupRoutes from './routes/TravelGroupRoutes';
 import userRoutes from './routes/userRoutes';
 
