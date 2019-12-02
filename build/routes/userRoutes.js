@@ -32,7 +32,7 @@ class userRoutes {
         });
     }
     login(req, res) {
-        console.log(req.body);
+        console.log(req.params);
         User_1.default.findOne({ username: req.body.username, password: req.body.password }).then((data) => {
             res.status(200).json(data);
         }).catch((error) => {
