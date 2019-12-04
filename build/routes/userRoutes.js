@@ -71,7 +71,9 @@ class userRoutes {
             nationality: req.body.nationality,
             photo: req.body.photo,
             biography: req.body.biography,
-            hobbies: req.body.hobbies
+            hobbies: req.body.hobbies,
+            following: req.body.following,
+            followers: req.body.followers
         };
         User_1.default.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }).then((data) => {
             console.log(user);
