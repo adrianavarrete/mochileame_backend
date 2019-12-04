@@ -24,6 +24,13 @@ class userRoutes {
             res.status(500).json(err);
         });
     }
+    getUserByUsername(req, res) {
+        User_1.default.findOne({ "username": req.params.username }).then((data) => {
+            res.status(200).json(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
     deleteUser(req, res) {
         User_1.default.findByIdAndDelete({ "_id": req.params.id }).then((data) => {
             res.status(200).json(data);
@@ -32,7 +39,7 @@ class userRoutes {
         });
     }
     login(req, res) {
-        console.log(req.params);
+        console.log(req.body);
         User_1.default.findOne({ username: req.body.username, password: req.body.password }).then((data) => {
             res.status(200).json(data);
         }).catch((error) => {
@@ -79,6 +86,7 @@ class userRoutes {
         this.router.post('/user/postuser', this.postUser);
         this.router.get('/user', this.getUsers);
         this.router.get('/user/:id', this.getUser);
+        this.router.get('/user/username/:username', this.getUserByUsername);
         this.router.delete('/user/deleteuser/:id', this.deleteUser);
         this.router.put('/user/updateUser/:id', this.updateUser);
     }
