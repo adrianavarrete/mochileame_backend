@@ -46,7 +46,7 @@ class TravelGroupRoutes {
     */
 
     postTravelGroup(req: Request, res: Response): void {
-        
+        console.log(req.body);
         const {name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation} = req.body;
         const newTravelGroup = new TravelGroup({name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation});
         

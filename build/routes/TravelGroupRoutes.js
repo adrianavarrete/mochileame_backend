@@ -38,6 +38,7 @@ class TravelGroupRoutes {
     dateOfCreation: { type: Date, required: true }
     */
     postTravelGroup(req, res) {
+        console.log(req.body);
         const { name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation } = req.body;
         const newTravelGroup = new TravelGroup_1.default({ name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation });
         newTravelGroup.save().then((data) => {
