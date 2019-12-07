@@ -12,7 +12,9 @@ const UserSchema = new Schema({
     photo: { type: String, required: false },  //nombre del archivo de la imagen que guardaremos en una carpeta del servidor
     biography: { type: String, required: false },
     hobbies: [String],
-    friends: [{ type: Schema.Types.ObjectId, ref: 'User', required: false }],
+    followers: [{ type: Schema.Types.ObjectId, ref: 'User', required: false }],
+    following: [{ type: Schema.Types.ObjectId, ref: 'User', required: false }]
+
 });
 
 export default model('User', UserSchema);
