@@ -13,6 +13,7 @@ const UserSchema = new mongoose_1.Schema({
     photo: { type: String, required: false },
     biography: { type: String, required: false },
     hobbies: [String],
-    friends: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: false }],
+    followers: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: false }],
+    following: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: false }]
 });
 exports.default = mongoose_1.model('User', UserSchema);
