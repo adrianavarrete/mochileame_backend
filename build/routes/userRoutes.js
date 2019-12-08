@@ -31,11 +31,32 @@ class userRoutes {
             res.status(500).json(err);
         });
     }
+    getFollowers(req, res) {
+        User_1.default.findOne({ "_id": req.params.id }).populate('followers').then((data) => {
+            res.status(200).json(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
+    getFollowingsAndFollowers(req, res) {
+        User_1.default.findOne({ "_id": req.params.id }).populate('following').populate('followers').then((data) => {
+            res.status(200).json(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
     deleteUser(req, res) {
         User_1.default.findByIdAndDelete({ "_id": req.params.id }).then((data) => {
             res.status(200).json(data);
         }).catch((err) => {
             res.status(500).json(err);
+        });
+    }
+    deleteAll(req, res) {
+        User_1.default.remove({}).then((data) => {
+            res.status(200).json(data);
+        }).catch((error) => {
+            res.status(500).json(error);
         });
     }
     login(req, res) {
@@ -88,8 +109,11 @@ class userRoutes {
         this.router.post('/user/postuser', this.postUser);
         this.router.get('/user', this.getUsers);
         this.router.get('/user/:id', this.getUser);
+        this.router.get('/user/:id/followers', this.getFollowers);
+        this.router.get('/user/:id/friends', this.getFollowingsAndFollowers);
         this.router.get('/user/username/:username', this.getUserByUsername);
         this.router.delete('/user/deleteuser/:id', this.deleteUser);
+        this.router.delete('/user/deleteAll', this.deleteAll);
         this.router.put('/user/updateUser/:id', this.updateUser);
     }
 }
