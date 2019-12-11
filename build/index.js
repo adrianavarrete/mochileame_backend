@@ -26,7 +26,7 @@ class Server {
     }
     config() {
         return __awaiter(this, void 0, void 0, function* () {
-            const MONGO_URI = 'mongodb://localhost/minimoAsignaturas';
+            const MONGO_URI = 'mongodb://localhost/mochileame';
             mongoose_1.default.set('useFindAndModify', true);
             mongoose_1.default.connect(MONGO_URI || process.env.MONGODB_URL, {
                 useNewUrlParser: true,
