@@ -17,7 +17,7 @@ class Server {
     }
 
     async config() {
-        const MONGO_URI = 'mongodb://localhost/minimoAsignaturas';
+        const MONGO_URI = 'mongodb://mongo/mochileame';
         mongoose.set('useFindAndModify', true);
 
         mongoose.connect(MONGO_URI || process.env.MONGODB_URL, {
