@@ -38,7 +38,6 @@ class TravelGroupRoutes {
     dateOfCreation: { type: Date, required: true }
     */
     postTravelGroup(req, res) {
-        console.log(req.body);
         const { name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation } = req.body;
         const newTravelGroup = new TravelGroup_1.default({ name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation });
         newTravelGroup.save().then((data) => {
@@ -52,6 +51,18 @@ class TravelGroupRoutes {
         console.log(req.params.id);
         TravelGroup_1.default.findByIdAndDelete(req.params.id).then((data) => {
             res.status(201).json(data);
+            console.log(data);
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
+    eliminarUsuario(req, res) {
+        console.log(req.params);
+        const cambioDeLista = {
+            users: req.body.users
+        };
+        TravelGroup_1.default.findByIdAndUpdate(req.params.id, { $set: cambioDeLista }, { new: true }).then((data) => {
+            res.status(200).json(data);
             console.log(data);
         }).catch((err) => {
             res.status(500).json(err);
@@ -93,66 +104,14 @@ class TravelGroupRoutes {
             res.status(500).json(err);
         });
     }
-    getTravelGroupByFilters(req, res) {
-        console.log(req.body);
-        var filter = [];
-        TravelGroup_1.default.find({}).then((data) => {
-        }).catch((error) => {
-            res.status(500).json(error);
-        });
-        // {
-        //     name: req.body.name, 
-        //     destination: req.body.destination, 
-        //     users: req.body.users, 
-        //     travelDateInit: req.body.travelDateInit, 
-        //     travelDateFin: req.body.travelDateFin,
-        //     gender: req.body.gender, 
-        //     hobbies: req.body.hobbies, 
-        // };
-        if (req.body.name != null) {
-            var parameter = "name : " + req.body.name;
-            filter.push(parameter);
-        }
-        if (req.body.destination != null) {
-            var parameter = "destination" + ":" + '"' + req.body.destination + '"';
-            filter.push(parameter);
-        }
-        if (req.body.users != null) {
-            var parameter = "users" + ":" + '"' + req.body.users + '"';
-            filter.push(parameter);
-        }
-        if (req.body.travelDateInit != null) {
-            var parameter = "travelDateInit" + ":" + '"' + req.body.travelDateInit + '"';
-            filter.push(parameter);
-        }
-        if (req.body.travelDateFin != null) {
-            var parameter = "travelDateFin" + ":" + '"' + req.body.travelDateFin + '"';
-            filter.push(parameter);
-        }
-        if (req.body.gender != null) {
-            var parameter = "gender" + ":" + '"' + req.body.gender + '"';
-            filter.push(parameter);
-        }
-        if (req.body.hobbies != null) {
-            var parameter = "hobbies" + ":" + '"' + req.body.hobbies + '"';
-            filter.push(parameter);
-        }
-        console.log(filter);
-        TravelGroup_1.default.findOne({ filter }).then((data) => {
-            res.status(200).json(data);
-            console.log(data);
-        }).catch((err) => {
-            res.status(500).json(err);
-        });
-    }
     routes() {
-        this.router.get('/travelgroup/filters', this.getTravelGroupByFilters);
         this.router.get('/travelgroup', this.getTravelGroups);
         this.router.get('/travelgroup/:id', this.getTravelGroup);
         this.router.post('/travelgroup', this.postTravelGroup);
         this.router.put('/travelgroup/:id', this.putTravelGroup);
         this.router.delete('/travelgroup/:id', this.deleteTravelGroup);
         this.router.put('/travelAddUser/:id', this.addUserTravelGroup);
+        this.router.put('/travelDelUser/:id', this.eliminarUsuario);
     }
 }
 const travelGroupRoutes = new TravelGroupRoutes();
