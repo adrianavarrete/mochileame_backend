@@ -18,6 +18,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const TravelGroupRoutes_1 = __importDefault(require("./routes/TravelGroupRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+require('dotenv').config();
 class Server {
     constructor() {
         this.app = express_1.default();

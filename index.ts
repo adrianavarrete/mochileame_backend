@@ -5,6 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import TravelGroupRoutes from './routes/TravelGroupRoutes';
 import userRoutes from './routes/userRoutes';
+require('dotenv').config();
 
 class Server {
     public app: express.Application;

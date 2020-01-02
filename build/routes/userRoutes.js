@@ -5,10 +5,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const User_1 = __importDefault(require("../models/User"));
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+var auth = "0";
 class userRoutes {
     constructor() {
         this.router = express_1.Router();
         this.routes();
+    }
+    authenticateToken(req, res, next) {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        console.log("token : " + token);
+        if (token == null)
+            return res.sendStatus(401);
+        jwt.verify(token, "d3bafcd8feb597e65e7c67bbfe224f180f22b8883be84da1918632250cc3254ca67dd3c95ed3425d8ef73636e3dec5d21629c28452eff8345d592a32b646d57e", (err) => {
+            console.log(err);
+            if (err)
+                return res.sendStatus(403);
+            next();
+        });
     }
     getUsers(req, res) {
         User_1.default.find({}).then((data) => {
@@ -62,7 +78,9 @@ class userRoutes {
     login(req, res) {
         console.log(req.body);
         User_1.default.findOne({ username: req.body.username, password: req.body.password }).then((data) => {
-            res.status(200).json(data);
+            const accessToken = jwt.sign(req.body.username, "d3bafcd8feb597e65e7c67bbfe224f180f22b8883be84da1918632250cc3254ca67dd3c95ed3425d8ef73636e3dec5d21629c28452eff8345d592a32b646d57e");
+            res.status(200).json({ data, accessToken: accessToken });
+            // res.status(200).json({data});
         }).catch((error) => {
             res.status(500).json(error);
         });
@@ -74,7 +92,8 @@ class userRoutes {
             username, password, mail
         });
         user.save().then((data) => {
-            res.status(200).json(data);
+            const accessToken = jwt.sign(req.body.username, "d3bafcd8feb597e65e7c67bbfe224f180f22b8883be84da1918632250cc3254ca67dd3c95ed3425d8ef73636e3dec5d21629c28452eff8345d592a32b646d57e");
+            res.status(200).json({ data, accessToken: accessToken });
         }).catch((error) => {
             if (error.code == 11000) {
                 res.status(412).json(error);
@@ -107,14 +126,14 @@ class userRoutes {
     routes() {
         this.router.post('/user/login', this.login);
         this.router.post('/user/postuser', this.postUser);
-        this.router.get('/user', this.getUsers);
-        this.router.get('/user/:id', this.getUser);
-        this.router.get('/user/:id/followers', this.getFollowers);
-        this.router.get('/user/:id/friends', this.getFollowingsAndFollowers);
-        this.router.get('/user/username/:username', this.getUserByUsername);
-        this.router.delete('/user/deleteuser/:id', this.deleteUser);
-        this.router.delete('/user/deleteAll', this.deleteAll);
-        this.router.put('/user/updateUser/:id', this.updateUser);
+        this.router.get('/user', this.authenticateToken, this.getUsers);
+        this.router.get('/user/:id', this.authenticateToken, this.getUser);
+        this.router.get('/user/:id/followers', this.authenticateToken, this.getFollowers);
+        this.router.get('/user/:id/friends', this.authenticateToken, this.getFollowingsAndFollowers);
+        this.router.get('/user/username/:username', this.authenticateToken, this.getUserByUsername);
+        this.router.delete('/user/deleteuser/:id', this.authenticateToken, this.deleteUser);
+        this.router.delete('/user/deleteAll', this.authenticateToken, this.deleteAll);
+        this.router.put('/user/updateUser/:id', this.authenticateToken, this.updateUser);
     }
 }
 const userroutes = new userRoutes();
