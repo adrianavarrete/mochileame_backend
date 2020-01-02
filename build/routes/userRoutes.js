@@ -103,6 +103,7 @@ class userRoutes {
         });
     }
     updateUser(req, res) {
+        console.log(req.body);
         const user = {
             name: req.body.name,
             lastname: req.body.lastname,
