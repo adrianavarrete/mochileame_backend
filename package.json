@@ -16,14 +16,18 @@
     "@types/mongoose": "^5.5.31",
     "@types/morgan": "^1.7.37",
     "@types/nodemon": "^1.19.0",
+    "@types/socket.io": "^2.1.4",
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^6.0.0-alpha.1",
     "nodemon": "^1.19.4",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.4"
   },
   "dependencies": {
     "@types/cors": "^2.8.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.7.11",
-    "morgan": "^1.9.1"
+    "morgan": "^1.9.1",
+    "socket.io": "^2.3.0"
   }
 }
