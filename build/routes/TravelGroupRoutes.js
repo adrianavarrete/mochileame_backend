@@ -5,10 +5,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const TravelGroup_1 = __importDefault(require("../models/TravelGroup"));
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
 class TravelGroupRoutes {
     constructor() {
         this.router = express_1.Router();
         this.routes();
+    }
+    authenticateToken(req, res, next) {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
+        console.log(token);
+        if (token == null)
+            return res.sendStatus(401);
+        jwt.verify(token, "d3bafcd8feb597e65e7c67bbfe224f180f22b8883be84da1918632250cc3254ca67dd3c95ed3425d8ef73636e3dec5d21629c28452eff8345d592a32b646d57e", (err) => {
+            console.log(err);
+            if (err)
+                return res.sendStatus(403);
+            next();
+        });
     }
     getTravelGroups(req, res) {
         TravelGroup_1.default.find({}).then((data) => {
@@ -25,18 +40,6 @@ class TravelGroupRoutes {
             res.status(500).json(error);
         });
     }
-    /*    name: { type: String, required: true, unique: true },
-    destination: { type: String, required: true, unique: true },
-    maxNumUsers: {type: Number, required: true},
-    users: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
-    privacity: { type: Boolean, required: true },  // Si es true es un grupo privado, si es false es un grupo público
-    travelDateInit: { type: Date, required: true },
-    travelDateFin: { type: Date, required: true },
-    gender: { type: String, required: true }, // male --> solo hombres, female --> solo mujeres, mix --> ambos generos
-    hobbies: [String],
-    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    dateOfCreation: { type: Date, required: true }
-    */
     postTravelGroup(req, res) {
         const { name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation } = req.body;
         const newTravelGroup = new TravelGroup_1.default({ name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation });
@@ -105,13 +108,13 @@ class TravelGroupRoutes {
         });
     }
     routes() {
-        this.router.get('/travelgroup', this.getTravelGroups);
-        this.router.get('/travelgroup/:id', this.getTravelGroup);
-        this.router.post('/travelgroup', this.postTravelGroup);
-        this.router.put('/travelgroup/:id', this.putTravelGroup);
-        this.router.delete('/travelgroup/:id', this.deleteTravelGroup);
-        this.router.put('/travelAddUser/:id', this.addUserTravelGroup);
-        this.router.put('/travelDelUser/:id', this.eliminarUsuario);
+        this.router.get('/travelgroup', this.authenticateToken, this.getTravelGroups);
+        this.router.get('/travelgroup/:id', this.authenticateToken, this.getTravelGroup);
+        this.router.post('/travelgroup', this.authenticateToken, this.postTravelGroup);
+        this.router.put('/travelgroup/:id', this.authenticateToken, this.putTravelGroup);
+        this.router.delete('/travelgroup/:id', this.authenticateToken, this.deleteTravelGroup);
+        this.router.put('/travelAddUser/:id', this.authenticateToken, this.addUserTravelGroup);
+        this.router.put('/travelDelUser/:id', this.authenticateToken, this.eliminarUsuario);
     }
 }
 const travelGroupRoutes = new TravelGroupRoutes();

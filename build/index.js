@@ -20,6 +20,7 @@ const socket_io_1 = __importDefault(require("socket.io"));
 const http_1 = require("http");
 const TravelGroupRoutes_1 = __importDefault(require("./routes/TravelGroupRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+require('dotenv').config();
 class Server_app {
     constructor() {
         this.app = express_1.default();

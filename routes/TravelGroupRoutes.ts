@@ -1,8 +1,10 @@
-import { Request, Response, Router } from 'express';
+import { Request, Response, Router, NextFunction } from 'express';
 import TravelGroup from '../models/TravelGroup';
 import User  from '../models/User';
 import { REPLCommand } from 'repl';
 
+require('dotenv').config()
+const jwt = require('jsonwebtoken');
 
 class TravelGroupRoutes {
 
@@ -13,6 +15,19 @@ class TravelGroupRoutes {
         this.routes();
 
     }
+
+    authenticateToken(req: Request, res: Response, next: NextFunction) {
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1];
+        console.log(token);
+        if (token == null) return res.sendStatus(401)
+
+         jwt.verify(token, "d3bafcd8feb597e65e7c67bbfe224f180f22b8883be84da1918632250cc3254ca67dd3c95ed3425d8ef73636e3dec5d21629c28452eff8345d592a32b646d57e", (err: Error) => {
+         console.log(err)
+         if (err) return res.sendStatus(403)
+         next()
+  })
+}
 
     getTravelGroups(req: Request, res: Response): void {
         TravelGroup.find({}).then((data) => {
@@ -33,18 +48,7 @@ class TravelGroupRoutes {
         });
     }
 
-    /*    name: { type: String, required: true, unique: true },
-    destination: { type: String, required: true, unique: true },
-    maxNumUsers: {type: Number, required: true},
-    users: [{ type: Schema.Types.ObjectId, ref: 'User', required: true }],
-    privacity: { type: Boolean, required: true },  // Si es true es un grupo privado, si es false es un grupo público
-    travelDateInit: { type: Date, required: true },
-    travelDateFin: { type: Date, required: true },
-    gender: { type: String, required: true }, // male --> solo hombres, female --> solo mujeres, mix --> ambos generos
-    hobbies: [String],
-    createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    dateOfCreation: { type: Date, required: true }
-    */
+
 
     postTravelGroup(req: Request, res: Response): void {
         
@@ -145,13 +149,13 @@ addUserTravelGroup (req: Request, res: Response): void{
 
     routes()
     {
-        this.router.get('/travelgroup', this.getTravelGroups);
-        this.router.get('/travelgroup/:id', this.getTravelGroup);
-        this.router.post('/travelgroup', this.postTravelGroup);
-        this.router.put('/travelgroup/:id', this.putTravelGroup);
-        this.router.delete('/travelgroup/:id', this.deleteTravelGroup);
-        this.router.put('/travelAddUser/:id', this.addUserTravelGroup);
-        this.router.put('/travelDelUser/:id', this.eliminarUsuario);
+        this.router.get('/travelgroup',this.authenticateToken,this.getTravelGroups);
+        this.router.get('/travelgroup/:id',this.authenticateToken, this.getTravelGroup);
+        this.router.post('/travelgroup',this.authenticateToken, this.postTravelGroup);
+        this.router.put('/travelgroup/:id',this.authenticateToken, this.putTravelGroup);
+        this.router.delete('/travelgroup/:id',this.authenticateToken, this.deleteTravelGroup);
+        this.router.put('/travelAddUser/:id',this.authenticateToken, this.addUserTravelGroup);
+        this.router.put('/travelDelUser/:id',this.authenticateToken, this.eliminarUsuario);
 
     }
 }

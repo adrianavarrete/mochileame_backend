@@ -8,6 +8,7 @@ import path from 'path';
 import TravelGroupRoutes from './routes/TravelGroupRoutes';
 import userRoutes from './routes/userRoutes';
 import { Message } from './models/Message';
+require('dotenv').config();
 
 class Server_app {
     public app: express.Application;

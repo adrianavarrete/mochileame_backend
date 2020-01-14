@@ -1,19 +1,42 @@
-import { Request, Response, Router } from 'express';
+import { Request, Response, Router, NextFunction } from 'express';
 import TravelGroup from '../models/TravelGroup';
 import User from '../models/User';
+
+require('dotenv').config()
+const jwt = require('jsonwebtoken');
+
+var auth: string = "0";
+
 
 class userRoutes {
 
     router: Router;
     user: any;
-
+    
     constructor() {
         this.router = Router();
         this.routes();
+    
+
 
     }
 
-    getUsers(req: Request, res: Response): void {
+     authenticateToken(req: Request, res: Response, next: NextFunction) {
+        const authHeader = req.headers['authorization']
+        const token = authHeader && authHeader.split(' ')[1];
+        console.log("token : " + token);
+        if (token == null) return res.sendStatus(401)
+
+         jwt.verify(token, "d3bafcd8feb597e65e7c67bbfe224f180f22b8883be84da1918632250cc3254ca67dd3c95ed3425d8ef73636e3dec5d21629c28452eff8345d592a32b646d57e", (err: Error) => {
+         console.log(err)
+         if (err) return res.sendStatus(403)
+         next()
+  })
+}
+
+    getUsers ( req: Request, res: Response): void {
+        
+      
         User.find({}).then((data) => {
             res.status(200).json(data);
 
@@ -77,7 +100,11 @@ class userRoutes {
         console.log(req.body);
 
         User.findOne({ username: req.body.username, password: req.body.password }).then((data) => {
-            res.status(200).json(data);
+
+            
+           const accessToken = jwt.sign(req.body.username, "d3bafcd8feb597e65e7c67bbfe224f180f22b8883be84da1918632250cc3254ca67dd3c95ed3425d8ef73636e3dec5d21629c28452eff8345d592a32b646d57e");
+           res.status(200).json({data, accessToken : accessToken});
+       // res.status(200).json({data});
 
         }).catch((error) => {
             res.status(500).json(error);
@@ -92,7 +119,8 @@ class userRoutes {
             username, password, mail
         });
         user.save().then((data) => {
-            res.status(200).json(data)
+            const accessToken = jwt.sign(req.body.username, "d3bafcd8feb597e65e7c67bbfe224f180f22b8883be84da1918632250cc3254ca67dd3c95ed3425d8ef73636e3dec5d21629c28452eff8345d592a32b646d57e");
+           res.status(200).json({data, accessToken : accessToken});
 
         }).catch((error) => {
             if (error.code == 11000) {
@@ -104,6 +132,7 @@ class userRoutes {
     }
 
     updateUser(req: Request, res: Response): void {
+        console.log(req.body);
         const user = {
             name: req.body.name,
             lastname: req.body.lastname,
@@ -114,7 +143,8 @@ class userRoutes {
             biography: req.body.biography,
             hobbies: req.body.hobbies,
             following: req.body.following,
-            followers: req.body.followers
+            followers: req.body.followers,
+            score: req.body.score
         };
 
         User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }).then((data) => {
@@ -129,15 +159,15 @@ class userRoutes {
 
     routes() {
         this.router.post('/user/login', this.login);
-        this.router.post('/user/postuser', this.postUser);
-        this.router.get('/user', this.getUsers);
-        this.router.get('/user/:id', this.getUser);
-        this.router.get('/user/:id/followers', this.getFollowers);
-        this.router.get('/user/:id/friends', this.getFollowingsAndFollowers);
-        this.router.get('/user/username/:username', this.getUserByUsername);
-        this.router.delete('/user/deleteuser/:id', this.deleteUser);
-        this.router.delete('/user/deleteAll', this.deleteAll);
-        this.router.put('/user/updateUser/:id', this.updateUser);
+        this.router.post('/user/postuser' , this.postUser);
+        this.router.get('/user', this.authenticateToken ,this.getUsers);
+        this.router.get('/user/:id', this.authenticateToken , this.getUser);
+        this.router.get('/user/:id/followers', this.authenticateToken , this.getFollowers);
+        this.router.get('/user/:id/friends', this.authenticateToken , this.getFollowingsAndFollowers);
+        this.router.get('/user/username/:username', this.authenticateToken , this.getUserByUsername);
+        this.router.delete('/user/deleteuser/:id', this.authenticateToken , this.deleteUser);
+        this.router.delete('/user/deleteAll', this.authenticateToken , this.deleteAll);
+        this.router.put('/user/updateUser/:id', this.authenticateToken , this.updateUser);
     }
 }
 
