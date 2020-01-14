@@ -143,7 +143,8 @@ class userRoutes {
             biography: req.body.biography,
             hobbies: req.body.hobbies,
             following: req.body.following,
-            followers: req.body.followers
+            followers: req.body.followers,
+            score: req.body.score
         };
 
         User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }).then((data) => {
