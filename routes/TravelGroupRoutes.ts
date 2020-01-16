@@ -2,9 +2,44 @@ import { Request, Response, Router, NextFunction } from 'express';
 import TravelGroup from '../models/TravelGroup';
 import User  from '../models/User';
 import { REPLCommand } from 'repl';
+import Foto from '../models/Foto';
 
 require('dotenv').config()
 const jwt = require('jsonwebtoken');
+var fs = require('fs');
+var multer = require('multer');
+var pathFoto = "";
+// const upload = multer({dest :'uploads/'});
+
+const storage = multer.diskStorage({
+
+destination: function(req: Request, file : File, cb : CallableFunction)
+{
+    cb(null, './uploads/');
+},
+
+filename: function(req: Request, file : any, cb : CallableFunction)
+{
+    pathFoto = file.path;
+    cb(null, file.originalname);
+
+}
+
+});
+
+
+const fileFilter = (req: Request, file : any, cb : CallableFunction) =>
+{
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png')
+    {
+        cb(null, true);
+    }
+    else {cb(null, false)}
+};
+
+const upload = multer({storage: storage});
+var path = require('path');
+
 
 class TravelGroupRoutes {
 
@@ -50,10 +85,27 @@ class TravelGroupRoutes {
 
 
 
+    añadirPathreq(req: Request, res: Response): void
+    {
+
+        console.log(req.body);
+        const path = {
+            path: req.body.path
+        };
+        
+        TravelGroup.findByIdAndUpdate(req.body.id, {$set: path}, {new: true}).then((data) => {
+            res.status(200).json(data);
+            console.log(data);
+    
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
+
     postTravelGroup(req: Request, res: Response): void {
         
-        const {name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation} = req.body;
-        const newTravelGroup = new TravelGroup({name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation});
+        const {name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation, path} = req.body;
+        const newTravelGroup = new TravelGroup({name, destination, maxNumUsers, users, privacity, travelDateInit, travelDateFin, gender, hobbies, createdBy, dateOfCreation, path});
         
         newTravelGroup.save().then((data) => {
             res.status(200).json(data);
@@ -146,7 +198,47 @@ addUserTravelGroup (req: Request, res: Response): void{
     }
 
    
+    postFoto(req: Request, res: Response): void {
+        //req.file
 
+
+       console.log(req);
+       var imgPath =path.join('./uploads/' + "502a8ce36d34e5a38084af56fa816202" + '.jpg'); // this is the path to your server where multer already has stored your image
+       console.log(imgPath);
+
+       var a = fs.readFileSync(imgPath);
+       Foto.findByIdAndUpdate( "502a8ce36d34e5a38084af56fa816202", {
+             $set:
+             {'img.data' : a,
+               'img.contentType' : 'image/png' }
+           }, function(err, doc) {
+             if (err)console.log("oi");
+ 
+           }
+       );
+ 
+    //In case you want to send back the stored image from the db.
+    //    Foto.findById(id, function (err, doc) {
+    //      if (err)console.log(err);
+ 
+    //      var base64 = doc.img.data.toString('base64');
+    //      res.send('data:'+doc.img.contentType+';base64,' + base64);
+ 
+    //    });
+    //    const data = req.body.formData;
+    //    const contentType = 'image/png';
+    //    var foto = new Foto({data, contentType});
+    //     foto.save().then((data) => {
+    //         res.status(200).json(data);
+    //         console.log(data);
+
+    //     }).catch((error) => {
+    //         res.status(500).json(error);
+    //     });
+    }
+
+
+    
     routes()
     {
         this.router.get('/travelgroup',this.authenticateToken,this.getTravelGroups);
@@ -156,6 +248,44 @@ addUserTravelGroup (req: Request, res: Response): void{
         this.router.delete('/travelgroup/:id',this.authenticateToken, this.deleteTravelGroup);
         this.router.put('/travelAddUser/:id',this.authenticateToken, this.addUserTravelGroup);
         this.router.put('/travelDelUser/:id',this.authenticateToken, this.eliminarUsuario);
+        this.router.put('/travelgroupPath',this.authenticateToken, this.añadirPathreq);
+        this.router.get('/fotos', (req: Request, res: Response)=> {
+
+            Foto.find({}).then((data) => {
+                res.status(200).json(data);
+            }).catch((error) => {
+                res.status(500).json(error);
+        });
+        } 
+            );
+        this.router.post('/foto', upload.single('file') ,this.authenticateToken, (req: any, res: Response)=> {
+        
+            
+            var b = req as any;
+            console.log(b.file);
+            //console.log(req);
+            var imgPath =path.join('./uploads/' + "502a8ce36d34e5a38084af56fa816202.png"); // this is the path to your server where multer already has stored your image
+            //console.log(imgPath);
+     
+            var a = fs.readFileSync(imgPath);
+                const data = a;
+                imgPath.filename;
+                console.log("aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + imgPath.filename);
+                //console.log(b.file);
+                data.name = data.name + "";
+              const contentType = 'image/png';
+             var foto = new Foto({data, contentType});
+             foto.save()
+             var foto = new Foto({data, contentType});
+                 foto.save().then((data) => {
+                     res.status(200).json(req.file.path);
+                     //console.log(data);
+         
+                 }).catch((error) => {
+                     res.status(500).json(error);
+                 });
+
+         });
 
     }
 }

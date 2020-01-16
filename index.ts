@@ -9,6 +9,8 @@ import TravelGroupRoutes from './routes/TravelGroupRoutes';
 import userRoutes from './routes/userRoutes';
 import { Message } from './models/Message';
 require('dotenv').config();
+var multer = require('multer');
+const upload = multer({dest :'/uploads/'});
 
 class Server_app {
     public app: express.Application;
@@ -38,7 +40,15 @@ class Server_app {
         this.app.use(morgan('dev'));
         this.app.use(cors());
         this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: false }))
+        this.app.use(express.urlencoded({ extended: false }));
+        this.app.use('/uploads',express.static('uploads'));
+        // this.app.use(multer({
+        //     dest: path.join(__dirname, 'public/assets/img/profile'),
+        //     rename: function (fieldname: , filename, req, res) {
+        //         console.log(req)// you will see your image url etc.
+        //       if(req.session.user) return req.session.user.id;
+        //     }
+        //   }));
 
     }
 

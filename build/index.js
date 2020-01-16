@@ -21,6 +21,8 @@ const http_1 = require("http");
 const TravelGroupRoutes_1 = __importDefault(require("./routes/TravelGroupRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 require('dotenv').config();
+var multer = require('multer');
+const upload = multer({ dest: '/uploads/' });
 class Server_app {
     constructor() {
         this.app = express_1.default();
@@ -43,6 +45,14 @@ class Server_app {
             this.app.use(cors_1.default());
             this.app.use(express_1.default.json());
             this.app.use(express_1.default.urlencoded({ extended: false }));
+            this.app.use('/uploads', express_1.default.static('uploads'));
+            // this.app.use(multer({
+            //     dest: path.join(__dirname, 'public/assets/img/profile'),
+            //     rename: function (fieldname: , filename, req, res) {
+            //         console.log(req)// you will see your image url etc.
+            //       if(req.session.user) return req.session.user.id;
+            //     }
+            //   }));
         });
     }
     routes() {
