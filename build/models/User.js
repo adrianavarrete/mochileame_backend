@@ -14,6 +14,10 @@ const UserSchema = new mongoose_1.Schema({
     biography: { type: String, required: false },
     hobbies: [String],
     followers: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: false }],
-    following: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: false }]
+    following: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: false }],
+    score: [{
+            key: String,
+            value: Number
+        }]
 });
 exports.default = mongoose_1.model('User', UserSchema);

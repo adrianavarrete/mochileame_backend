@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Model } from "mongoose";
 
 const UserSchema = new Schema({
     username: { type: String, required: true, unique: true },
@@ -13,7 +13,11 @@ const UserSchema = new Schema({
     biography: { type: String, required: false },
     hobbies: [String],
     followers: [{ type: Schema.Types.ObjectId, ref: 'User', required: false }],
-    following: [{ type: Schema.Types.ObjectId, ref: 'User', required: false }]
+    following: [{ type: Schema.Types.ObjectId, ref: 'User', required: false }],
+    score: [{
+        key: String,
+        value: Number
+    }]
 
 });
 
