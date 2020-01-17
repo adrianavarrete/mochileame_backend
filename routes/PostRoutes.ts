@@ -3,9 +3,33 @@ import TravelGroup from '../models/TravelGroup';
 import User  from '../models/User';
 import Post from '../models/Post';
 import { REPLCommand } from 'repl';
+import Foto from '../models/Foto';
 
 require('dotenv').config()
 const jwt = require('jsonwebtoken');
+var fs = require('fs');
+var multer = require('multer');
+var pathFoto = "";
+// const upload = multer({dest :'uploads/'});
+
+const storage = multer.diskStorage({
+
+destination: function(req: Request, file : File, cb : CallableFunction)
+{
+    cb(null, './uploads/');
+},
+
+filename: function(req: Request, file : any, cb : CallableFunction)
+{
+    pathFoto = file.path;
+    cb(null, file.originalname);
+
+}
+
+});
+
+const upload = multer({storage: storage});
+var path = require('path');
 
 class PostRoutes {
 
@@ -79,7 +103,7 @@ class PostRoutes {
         console.log(req.body.estado + req.body.mensajes);
         const { creador, titulo, estado, mensajes } = req.body;
         const post = new Post({
-            creador, titulo, estado, mensajes
+            creador, titulo, estado, mensajes, path
         });
         post.save().then((data) => {
             res.status(200).json(data);
@@ -93,14 +117,58 @@ class PostRoutes {
     }
 
 
-            
+    añadirPathPost(req: Request, res: Response): void
+    {
+
+        console.log(req.body);
+        const path = {
+            path: req.body.path
+        };
+        
+        TravelGroup.findByIdAndUpdate(req.body.id, {$set: path}, {new: true}).then((data) => {
+            res.status(200).json(data);
+            console.log(data);
+    
+        }).catch((err) => {
+            res.status(500).json(err);
+        });
+    }
+
     routes(){
 
         this.router.post('/foro/post',  this.authenticateToken, this.postPost);
         this.router.put('/foro/post/:id' ,  this.authenticateToken, this.updatePost);
         this.router.get('/foro', this.authenticateToken ,this.getPosts);
         this.router.get('/foro/:id', this.authenticateToken , this.getPost);
-    
+        this.router.put('/foro/foto', this.authenticateToken, this.añadirPathPost);
+        this.router.post('/foto2', upload.single('file') ,this.authenticateToken, (req: any, res: Response)=> {
+        
+            
+            var b = req as any;
+            console.log(b.file);
+            //console.log(req);
+            var imgPath =path.join('./uploads/' + "502a8ce36d34e5a38084af56fa816202.png"); // this is the path to your server where multer already has stored your image
+            //console.log(imgPath);
+     
+            var a = fs.readFileSync(imgPath);
+                const data = a;
+                imgPath.filename;
+                console.log("aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + imgPath.filename);
+                //console.log(b.file);
+                data.name = data.name + "";
+              const contentType = 'image/png';
+             var foto = new Foto({data, contentType});
+             foto.save()
+             var foto = new Foto({data, contentType});
+                 foto.save().then((data) => {
+                     res.status(200).json(req.file.path);
+                     //console.log(data);
+         
+                 }).catch((error) => {
+                     res.status(500).json(error);
+                 });
+
+         });
     }
 
 
