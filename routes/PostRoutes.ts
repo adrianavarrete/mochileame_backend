@@ -101,7 +101,7 @@ class PostRoutes {
         console.log(req.body);
         console.log(req.body.creador + req.body.titulo);
         console.log(req.body.estado + req.body.mensajes);
-        const { creador, titulo, estado, mensajes } = req.body;
+        const { creador, titulo, estado, mensajes, path } = req.body;
         const post = new Post({
             creador, titulo, estado, mensajes, path
         });
@@ -125,7 +125,7 @@ class PostRoutes {
             path: req.body.path
         };
         
-        TravelGroup.findByIdAndUpdate(req.body.id, {$set: path}, {new: true}).then((data) => {
+        Post.findByIdAndUpdate(req.body.id, {$set: path}, {new: true}).then((data) => {
             res.status(200).json(data);
             console.log(data);
     

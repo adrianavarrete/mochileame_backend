@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const TravelGroup_1 = __importDefault(require("../models/TravelGroup"));
 const Post_1 = __importDefault(require("../models/Post"));
 const Foto_1 = __importDefault(require("../models/Foto"));
 require('dotenv').config();
@@ -75,7 +74,7 @@ class PostRoutes {
         console.log(req.body);
         console.log(req.body.creador + req.body.titulo);
         console.log(req.body.estado + req.body.mensajes);
-        const { creador, titulo, estado, mensajes } = req.body;
+        const { creador, titulo, estado, mensajes, path } = req.body;
         const post = new Post_1.default({
             creador, titulo, estado, mensajes, path
         });
@@ -94,7 +93,7 @@ class PostRoutes {
         const path = {
             path: req.body.path
         };
-        TravelGroup_1.default.findByIdAndUpdate(req.body.id, { $set: path }, { new: true }).then((data) => {
+        Post_1.default.findByIdAndUpdate(req.body.id, { $set: path }, { new: true }).then((data) => {
             res.status(200).json(data);
             console.log(data);
         }).catch((err) => {

@@ -6,5 +6,6 @@ const PostSchema = new mongoose_1.Schema({
     titulo: { type: String, required: true },
     estado: { type: String },
     mensajes: [String],
+    path: { type: String, required: true }
 });
 exports.default = mongoose_1.model('Post', PostSchema);
