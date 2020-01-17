@@ -12,6 +12,7 @@ const TravelGroupSchema = new mongoose_1.Schema({
     gender: { type: String, required: true },
     hobbies: [String],
     createdBy: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
-    dateOfCreation: { type: Date, required: true }
+    dateOfCreation: { type: Date, required: true },
+    path: { type: String, required: true }
 });
 exports.default = mongoose_1.model('TravelGroup', TravelGroupSchema);

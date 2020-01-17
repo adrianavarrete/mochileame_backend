@@ -11,7 +11,8 @@ const TravelGroupSchema = new Schema({
     gender: { type: String, required: true }, // male --> solo hombres, female --> solo mujeres, mix --> ambos generos
     hobbies: [String],
     createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    dateOfCreation: { type: Date, required: true }
+    dateOfCreation: { type: Date, required: true },
+    path:{type: String,  required: true}
 });
 
 export default model('TravelGroup', TravelGroupSchema);
