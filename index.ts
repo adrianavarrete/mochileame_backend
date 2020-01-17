@@ -6,6 +6,7 @@ import socketIO from 'socket.io';
 import {createServer, Server} from 'http';
 import path from 'path';
 import TravelGroupRoutes from './routes/TravelGroupRoutes';
+import PostRoutes from './routes/PostRoutes';
 import userRoutes from './routes/userRoutes';
 import { Message } from './models/Message';
 require('dotenv').config();
@@ -55,6 +56,7 @@ class Server_app {
     routes() {
         this.app.use(TravelGroupRoutes);
         this.app.use(userRoutes);
+        this.app.use(PostRoutes);
     }
 
     start() {
