@@ -195,14 +195,6 @@ class TravelGroupRoutes {
             var imgPath = path.join('./uploads/' + "502a8ce36d34e5a38084af56fa816202.png"); // this is the path to your server where multer already has stored your image
             //console.log(imgPath);
             var a = fs.readFileSync(imgPath);
-            // Foto.findByIdAndUpdate( "502a8ce36d34e5a38084af56fa816202", {
-            //       $set:
-            //       {'img.data' : a,
-            //         'img.contentType' : 'image/png' }
-            //     }, function(err, doc) {
-            //       if (err)console.log("oi");
-            //     }
-            // ); 
             const data = a;
             imgPath.filename;
             console.log("aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + imgPath.filename);
@@ -218,20 +210,6 @@ class TravelGroupRoutes {
             }).catch((error) => {
                 res.status(500).json(error);
             });
-            // Foto.findById("502a8ce36d34e5a38084af56fa816202", function (err, doc: Document) {
-            //     if (err)console.log(err);
-            //     var base64 = doc.img.data.toString('base64');
-            //     res.send('data:'+doc.img.contentType+';base64,' + base64);
-            //   });
-            //    const data = req.body.formData;
-            //    const contentType = 'image/png';
-            //    var foto = new Foto({data, contentType});
-            //     foto.save().then((data) => {
-            //         res.status(200).json(data);
-            //         console.log(data);
-            //     }).catch((error) => {
-            //         res.status(500).json(error);
-            //     });
         });
     }
 }
