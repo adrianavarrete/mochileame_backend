@@ -19,6 +19,7 @@ const cors_1 = __importDefault(require("cors"));
 const socket_io_1 = __importDefault(require("socket.io"));
 const http_1 = require("http");
 const TravelGroupRoutes_1 = __importDefault(require("./routes/TravelGroupRoutes"));
+const PostRoutes_1 = __importDefault(require("./routes/PostRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 require('dotenv').config();
 class Server_app {
@@ -48,6 +49,7 @@ class Server_app {
     routes() {
         this.app.use(TravelGroupRoutes_1.default);
         this.app.use(userRoutes_1.default);
+        this.app.use(PostRoutes_1.default);
     }
     start() {
         this.app.listen(this.app.get('port'), () => {
