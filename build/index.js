@@ -77,7 +77,16 @@ io.on('connection', (socket) => {
         socket.username = name;
         io.emit('users-changed', { user: name, event: 'joined' });
     });
+    socket.on('set-grupo', (grupo) => {
+        socket.grupo = grupo;
+    });
     socket.on('send-message', (message) => {
-        io.emit('message', { msg: message.text, user: socket.username, createdAt: new Date() });
+        // const m = new Message({
+        //     name: socket.username,
+        //     msg: message.text,
+        //     grupo: socket.grupo
+        // });
+        // m.save(); 
+        io.emit('message', { msg: message.text, user: socket.username, createdAt: new Date(), grupo: socket.grupo });
     });
 });

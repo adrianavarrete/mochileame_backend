@@ -1,14 +1,9 @@
+import { Schema, model } from "mongoose";
 
-export class User {
-    constructor(private name: string) {}
-}
+const MessageSchema = new Schema({
+    msg: { type: String },
+    name: {type: String},
+    grupo: {type: String}
+});
 
-export class Message {
-    constructor(private from: User, private content: string) {}
-}
-
-export class ChatMessage extends Message{
-    constructor(from: User, content: string) {
-        super(from, content);
-    }
-}
+export default model('Msg', MessageSchema);
