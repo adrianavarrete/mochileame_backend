@@ -25,8 +25,6 @@ const upload = multer({ dest: '/uploads/' });
 class Server_app {
     constructor() {
         this.app = express_1.default();
-        this.server = require('http').Server(this.app);
-        this.io = require('socket.io')(server);
         this.config();
         this.routes();
     }
@@ -60,13 +58,26 @@ class Server_app {
         this.app.use(PostRoutes_1.default);
     }
     start() {
-        this.app.listen(this.app.get('port'), () => {
+        const serv = this.app.listen(this.app.get('port'), () => {
             console.log('Server on port', this.app.get('port'));
         });
-        this.io.on('connection', function (socket) {
-            console.log('Alguien se ha conectado con Sockets');
-        });
+        return serv;
     }
 }
 const server = new Server_app();
-server.start();
+const s = server.start();
+const SocketIO = require('socket.io');
+const io = SocketIO(s);
+io.on('connection', (socket) => {
+    console.log('Alguien se ha conectado con Sockets');
+    socket.on('disconnect', function () {
+        io.emit('users-changed', { user: socket.username, event: 'left' });
+    });
+    socket.on('set-name', (name) => {
+        socket.username = name;
+        io.emit('users-changed', { user: name, event: 'joined' });
+    });
+    socket.on('send-message', (message) => {
+        io.emit('message', { msg: message.text, user: socket.username, createdAt: new Date() });
+    });
+});
