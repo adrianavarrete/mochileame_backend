@@ -16,8 +16,6 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
-const socket_io_1 = __importDefault(require("socket.io"));
-const http_1 = require("http");
 const TravelGroupRoutes_1 = __importDefault(require("./routes/TravelGroupRoutes"));
 const PostRoutes_1 = __importDefault(require("./routes/PostRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
@@ -27,10 +25,10 @@ const upload = multer({ dest: '/uploads/' });
 class Server_app {
     constructor() {
         this.app = express_1.default();
+        this.server = require('http').Server(this.app);
+        this.io = require('socket.io')(server);
         this.config();
         this.routes();
-        this.server = http_1.createServer(this.app);
-        this.io = socket_io_1.default(this.server);
     }
     config() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -65,15 +63,8 @@ class Server_app {
         this.app.listen(this.app.get('port'), () => {
             console.log('Server on port', this.app.get('port'));
         });
-        this.io.on('connect', (socket) => {
-            console.log('Connected client on port %s.', this.app.get('port'));
-            socket.on('message', (m) => {
-                console.log('[server](message): %s', JSON.stringify(m));
-                this.io.emit('message', m);
-            });
-            socket.on('disconnect', () => {
-                console.log('Client disconnected');
-            });
+        this.io.on('connection', function (socket) {
+            console.log('Alguien se ha conectado con Sockets');
         });
     }
 }

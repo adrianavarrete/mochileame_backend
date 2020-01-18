@@ -14,17 +14,18 @@ var multer = require('multer');
 const upload = multer({dest :'/uploads/'});
 
 class Server_app {
-    public app: express.Application;
-    private server: Server;
-    private io: SocketIO.Server;
+    public app: any
+    private server: any
+    private io: any
 
 
     constructor() {
         this.app = express();
+        this.server = require('http').Server(this.app)
+        this.io = require('socket.io')(server);
         this.config();
         this.routes();
-        this.server = createServer(this.app);
-        this.io = socketIO(this.server);
+
     }
 
     async config() {
@@ -63,17 +64,11 @@ class Server_app {
         this.app.listen(this.app.get('port'), () => {
             console.log('Server on port', this.app.get('port'));
         });
-        this.io.on('connect', (socket: any) => {
-            console.log('Connected client on port %s.', this.app.get('port'));
-            socket.on('message', (m: Message) => {
-                console.log('[server](message): %s', JSON.stringify(m));
-                this.io.emit('message', m);
-            });
 
-            socket.on('disconnect', () => {
-                console.log('Client disconnected');
-            });
+        this.io.on('connection', function(socket: any){
+            console.log('Alguien se ha conectado con Sockets')
         });
+        
         
     }
 
@@ -81,3 +76,4 @@ class Server_app {
 
 const server = new Server_app();
 server.start();
+
