@@ -8,7 +8,7 @@ import path from 'path';
 import TravelGroupRoutes from './routes/TravelGroupRoutes';
 import PostRoutes from './routes/PostRoutes';
 import userRoutes from './routes/userRoutes';
-import { Message } from './models/Message';
+import Message from './models/Message';
 require('dotenv').config();
 var multer = require('multer');
 const upload = multer({dest :'/uploads/'});
@@ -25,7 +25,7 @@ class Server_app {
     }
 
     async config() {
-        const MONGO_URI = 'mongodb://localhost/minimoAsignaturas';
+        const MONGO_URI = 'mongodb://mongo/mochileame';
         mongoose.set('useFindAndModify', true);
 
         mongoose.connect(MONGO_URI || process.env.MONGODB_URL, {
